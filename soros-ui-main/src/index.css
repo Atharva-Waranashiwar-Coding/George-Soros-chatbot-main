@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic body styling for dark mode */
+body {
+  @apply bg-white text-gray-900 dark:bg-dark-bg dark:text-dark-text;
+  @apply transition-colors duration-200 font-sans; /* Apply Poppins font */
+}

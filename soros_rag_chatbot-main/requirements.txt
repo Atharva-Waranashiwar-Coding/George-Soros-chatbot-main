@@ -1,0 +1,7 @@
+pandas
+numpy
+chromadb
+openpyxl
+yfinance
+google-generativeai
+sentence-transformers

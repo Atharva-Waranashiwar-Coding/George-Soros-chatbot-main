@@ -1,0 +1,13 @@
+Django==5.2
+djangorestframework==3.16.0
+django-cors-headers==4.7.0
+
+pandas==2.2.3
+numpy==2.2.4
+yfinance==0.2.55
+statsmodels==0.14.4
+
+google-generativeai==0.8.4
+chromadb
+openpyxl==3.1.5
+sentence_transformers
