@@ -113,17 +113,40 @@ _chatbot_error = None
 
 try:
     _chatbot = SorosRAGChatbot()
-except Exception as e:
+except RuntimeError as e:
+    # API key or configuration error
     _chatbot_error = str(e)
-    print(f"CRITICAL WARNING: Failed to initialize SorosRAGChatbot: {e}")
+    print(f"⚠️ CRITICAL: {e}")
+    print("📝 To fix: Set GEMINI_API_KEY or GOOGLE_API_KEY environment variable")
+    print("🔗 Get a free key at: https://makersuite.google.com/app/apikey")
+except Exception as e:
+    # Other initialization errors (database, etc.)
+    _chatbot_error = str(e)
+    print(f"❌ CRITICAL WARNING: Failed to initialize SorosRAGChatbot: {e}")
 
 
 def answer_question(query: str, k: int = 5) -> dict:
     """
     Adapter for the RAGView: returns a dict with an 'answer' key.
+    
+    If the chatbot failed to initialize, returns an error message dict.
+    This allows the view to handle it appropriately (401 for API key, 500 for other errors).
     """
     if _chatbot is None:
-        return {"answer": f"Error: RAG components not available ({_chatbot_error})."}
+        error_msg = _chatbot_error or "Unknown initialization error"
+        
+        # Provide more helpful error messages for common issues
+        if "API key" in error_msg.lower():
+            return {
+                "answer": f"Error: Gemini API key is not configured. Set GEMINI_API_KEY or GOOGLE_API_KEY environment variable. "
+                          f"Get a free key at https://makersuite.google.com/app/apikey"
+            }
+        elif "chroma" in error_msg.lower() or "database" in error_msg.lower():
+            return {
+                "answer": "Error: RAG knowledge base (Chroma) could not be initialized. Ensure the database file exists."
+            }
+        else:
+            return {"answer": f"Error: RAG components not available ({error_msg})."}
 
     try:
         return {"answer": _chatbot.answer(query)}
