@@ -1,81 +1,23 @@
-# George Soros Insights Chatbot
+# RAG Chatbot: George Soros Insights
 
-A full-stack application combining financial analysis with Retrieval-Augmented Generation (RAG) to provide educational insights inspired by George Soros's investment philosophy and ideas about market reflexivity.
+A React and Django application that retrieves relevant Q&A context from ChromaDB before generating educational answers with Google Gemini. It also includes market-data and pair-analysis views.
 
-## 🏗️ Architecture
+**Stack:** Python, Django REST Framework, React, Vite, ChromaDB, Google Gemini, yfinance.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Frontend (React + Vite)                       │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Pages: HomePage, ChatbotPage, StockDashboard,           │   │
-│  │  PairTradingPage                                         │   │
-│  │  Components: NavBar, RatiosTable, StatementTable         │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ HTTP/REST
-                           │
-┌──────────────────────────▼──────────────────────────────────────┐
-│              Django REST Backend (Port 8000)                    │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │  API Endpoints:                                        │    │
-│  │  • POST /api/ragbot/          → RAG Chatbot           │    │
-│  │  • POST /api/pairs/           → Pair Trading Analysis │    │
-│  └────────────────────────────────────────────────────────┘    │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │  Core Modules:                                         │    │
-│  │  • RAG Pipeline: Chroma + Gemini                       │    │
-│  │  • Market Data: yfinance integration                   │    │
-│  │  • Pair Trading: Statistical analysis                 │    │
-│  └────────────────────────────────────────────────────────┘    │
-└──────────────────┬───────────────────────┬──────────────────────┘
-                   │                       │
-        ┌──────────▼──┐            ┌──────▼─────────┐
-        │   ChromaDB   │            │ Google Gemini  │
-        │  (Knowledge  │            │ API (RAG       │
-        │   Base)      │            │  Answer Gen)   │
-        └──────────────┘            └────────────────┘
-```
+## Local demo
 
-## 📁 Project Structure
+Start the backend and frontend using the [Quick Start](#-quick-start) below. Open the Chatbot page and ask: **How does reflexivity affect market prices?** The retrieval layer indexes the checked-in Q&A spreadsheet and supplies relevant entries to answer generation.
 
-```
-soros-insights-chatbot/
-├── soros-backend-main/
-│   ├── financials_api/              # Main Django app
-│   │   ├── views/
-│   │   │   ├── rag_view.py         # RAG chatbot endpoint
-│   │   │   └── pairs_view.py       # Pair trading endpoint
-│   │   ├── rag_data.py             # Knowledge base preparation
-│   │   ├── rag_generator.py        # Gemini answer generation
-│   │   ├── rag_retriever.py        # Chroma retrieval
-│   │   ├── market_data.py          # Market data fetching
-│   │   ├── ticker_utils.py         # Ticker parsing
-│   │   └── tests.py                # Test suite
-│   ├── soros_backend/              # Django settings
-│   ├── chroma_db/                  # Vector database
-│   ├── requirements.txt
-│   ├── manage.py
-│   └── README.md (API docs)
-│
-├── soros-ui-main/                  # React frontend
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── HomePage.jsx
-│   │   │   ├── ChatbotPage.jsx
-│   │   │   └── ...
-│   │   ├── services/
-│   │   │   ├── chatbotService.js   # API communication
-│   │   │   └── pairService.js
-│   │   └── components/
-│   ├── package.json
-│   ├── vite.config.js
-│   └── README.md
-│
-├── .env.example                    # Environment variables template
-├── DEPLOYMENT.md                   # Deployment guide
-└── README.md                        # This file
-```
+No hosted demo is currently linked. This is an educational application; generated responses and market analysis require independent review.
+
+## Architecture notes
+
+- Retrieval and generation live in separate modules, so embedding and answer-generation choices can evolve independently.
+- Chroma stores a persistent Q&A index and initializes it when the collection is empty. The default embedding function has an optional sentence-transformer path.
+- Django serves the API; React handles chat and market-analysis views. Local Django settings require hardening before a public deployment.
+
+<details>
+<summary>Setup, API reference, and development details</summary>
 
 ## 🚀 Quick Start
 
@@ -317,3 +259,5 @@ This project is for educational purposes.
 ## 👨‍💼 About
 
 Built as an educational tool to explore George Soros's investment philosophy and market reflexivity principles through conversational AI.
+
+</details>
