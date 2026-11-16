@@ -57,6 +57,7 @@ No hosted demo is currently linked. This is an educational application; generate
 
 5. **Run migrations**
    ```bash
+   export DJANGO_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(50))')"
    python manage.py migrate
    ```
 
@@ -98,6 +99,7 @@ Copy `.env.example` to `.env` in the backend directory:
 ```bash
 # Google Generative AI Configuration
 GEMINI_API_KEY=your_api_key_here
+DJANGO_SECRET_KEY=your_unique_random_signing_secret
 
 # Django Configuration (optional)
 DEBUG=True
